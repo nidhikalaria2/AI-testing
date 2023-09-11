@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+  </head>
+
+  <body>
+    Hello
+    <p id="result"></p>
+    <script type="module">
+      import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0";
+
+      async function run() {
+        let classifier = await pipeline("sentiment-analysis");
+
+        let output = await classifier("i am feeling sad");
+
+        result.innerText = `This text is
+            ${output[0].label.toLowerCase()};
+            with a score of
+            ${output[0].score.toFixed(4)}`;
+      }
+
+      run();
+    </script>
+  </body>
+</html>
