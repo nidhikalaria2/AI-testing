@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="ie=edge"
+    />
+    <title>AI-testing</title>
+    <style>
+      /* CSS for drawing bounding boxes */
+      .image-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .bounding-box {
+        position: absolute;
+        border: 2px solid red;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Create a container div for the image -->
+    <div class="image-container">
+      <!-- Add an image element -->
+      <img
+        id="image"
+        src="https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/cats.jpg"
+        alt="Image"
+      />
+    </div>
+
+    <script type="module">
+      import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0";
+
+      async function run() {
+        const img = document.getElementById("image");
+        const detector = await pipeline('object-detection', 'Xenova/detr-resnet-50');
+        const output = await detector(img, { threshold: 0.9 });
+
+        // Create bounding boxes for each detected object and append them to the container
+        output.forEach((obj, index) => {
+          const boundingBox = document.createElement("div");
+          boundingBox.className = "bounding-box";
+          boundingBox.style.left = obj.box.xmin + "px";
+          boundingBox.style.top = obj.box.ymin + "px";
+          boundingBox.style.width = obj.box.xmax - obj.box.xmin + "px";
+          boundingBox.style.height = obj.box.ymax - obj.box.ymin + "px";
+          document.querySelector(".image-container").appendChild(boundingBox);
+        });
+      }
+
+      run();
+    </script>
+  </body>
+</html>
