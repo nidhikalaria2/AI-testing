@@ -6,75 +6,108 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>AI-testing</title>
     <style>
-    .image-container {
-      position: relative;
-      display: inline-block;
-    }
+      .image-container {
+        position: relative;
+      }
 
-    .image {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0.8;
+      .image {
+        position: relative;
+        display: block;
+        z-index: 1;
+      }
 
-    }
+      .objects {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        left: 0;
+      }
 
-    .objects {
-      z-index: 9;
-      margin: 30px;
-    }
+      .bounding-box {
+        position: absolute;
+        outline: 2px solid red;
+      }
 
-    .cat-1, .cat-2, .remote-1, .remote-2, .sofa {
-      position: relative;
-      border: 3px solid red;
-
-      
-    }
-  </style>
+      /* .cat-1,
+      .cat-2,
+      .remote-1,
+      .remote-2,
+      .sofa {
+        position: relative;
+        border: 3px solid red;
+      } */
+    </style>
   </head>
   <body>
     <div class="image-container">
-    
       <div class="image">
-      <img id="image"
-        src="https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/cats.jpg"
-      />
-    </div>
+        <img id="image" />
+      </div>
       <div class="objects">
+        <!--
         <div class="cat-1">cat</div>
         <div class="cat-2">cat</div>
         <div class="remote-1">remote</div>
         <div class="remote-2">remote</div>
         <div class="sofa">sofa</div>
+        -->
       </div>
     </div>
+    <div id="loading">Loading…</div>
 
     <script type="module">
-      import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0";]\
-      
+      import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0";
+
       async function run() {
-        const img = document.getElementById("image");
-        const detector = await pipeline('object-detection', 'Xenova/detr-resnet-50');
-        const output = await detector(img, { threshold: 0.9 });
-        console.log(output);
+        // Defining img source
+        const src =
+          "https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/cats.jpg";
+        // const src = "test.png";
+
+        // Selecting img from HTML
+        const img = document.querySelector("#image");
+
+        // Selecting loading from HTML
+        const loading = document.querySelector("#loading");
+
+        // Shows loading
+        loading.style.display = "block";
+
+        // Show image in my HTML
+        img.setAttribute("src", src);
+
+        const detector = await pipeline(
+          "object-detection",
+          "Xenova/detr-resnet-50"
+        );
+        const output = await detector(src, { threshold: 0.9 });
+
+        // Hides loading
+        loading.style.display = "none";
+
+        if (output.length === 0) {
+          alert("No objects found :(");
+        }
 
         output.forEach((obj, index) => {
+          console.log(obj);
+
           const boundingBox = document.createElement("div");
+
+          boundingBox.innerHTML = obj.label;
           boundingBox.className = "bounding-box";
           boundingBox.style.left = obj.box.xmin + "px";
           boundingBox.style.top = obj.box.ymin + "px";
           boundingBox.style.width = obj.box.xmax - obj.box.xmin + "px";
           boundingBox.style.height = obj.box.ymax - obj.box.ymin + "px";
-          document.querySelector(".image-container").appendChild(boundingBox);
+          document.querySelector(".objects").appendChild(boundingBox);
         });
-      //async function run() {
-       // let img = 'https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/cats.jpg';
-        
-       // let detector = await pipeline('object-detection', 'Xenova/detr-resnet-50');
-       // let output = await detector(img, { threshold: 0.9 });
-        
+
+        //async function run() {
+        // let img = 'https://huggingface.co/datasets/Xenova/transformers.js-docs/resolve/main/cats.jpg';
+
+        // let detector = await pipeline('object-detection', 'Xenova/detr-resnet-50');
+        // let output = await detector(img, { threshold: 0.9 });
       }
 
       run();
