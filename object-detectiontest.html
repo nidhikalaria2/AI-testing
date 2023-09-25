@@ -7,16 +7,22 @@
     <title>AI-testing</title>
     <style>
       body {
-            display: flex;
+            display:inline-block;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #f0f0f0; /* Background color for the entire page */
+            background-color: #f5f4eb;
+        }
+
+        h1 {
+            
+            color:cadetblue;
+            font-size: 40px;
         }
 
         .image-container {
-            text-align: center; /* Center the image and bounding boxes */
+            /* text-align: center; */
             position: relative;
         }
 
@@ -36,22 +42,23 @@
         .bounding-box {
             position: absolute;
             outline: 2px solid red;
-            background: rgba(97, 97, 97, 0.247); /* Semi-transparent red background */
-            color: rgb(255, 255, 255); /* White text color */
-            font-weight:bolder; /* Bold text */
-            padding: 2px 5px; /* Add some padding to the bounding box */
+            background: rgba(97, 97, 97, 0.247);
+            color: rgb(255, 255, 255);
+            font-weight:bolder;
+            padding: 2px 5px;
         }
 
         /* Style the input container */
         .input-container {
-            text-align: center; /* Center the input box */
+            text-align: center;
+            margin-bottom: 20px;
+            
         }
 
         /* Style the input box */
         #imageUpload {
             width: 400px;
             height: 40px;
-            align-items: center;
             padding-top: 20px;
             padding-left: 20px;
             margin-right: 40px;
@@ -106,7 +113,7 @@
     </style>
   </head>
   <body>
-    
+    <h1>AI Object Detection</h1>
      <!-- Add an input element for image upload -->
     <div class="input-container">
       <input type="file" id="imageUpload" accept="image/*" />
