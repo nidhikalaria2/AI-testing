@@ -7,262 +7,278 @@
     <title>AI-testing</title>
     <style>
       body {
-            display:flex;
-            flex-direction: column;
-            justify-content: start;
-            align-items:center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f5f4eb;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f5f4eb;
+      }
+
+      h1 {
+        color: cadetblue;
+        font-size: 40px;
+      }
+
+      .image-container {
+        /* text-align: center; */
+        position: relative;
+        max-width: 500px;
+      }
+
+      .image {
+        /* position: relative; */
+        /* display: inline-block; Make the image inline-block to center it */
+        /* max-width: 100%; */
+        width: 100%;
+      }
+
+      img {
+        width: 100%;
+        display: block;
+      }
+
+      .objects {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .bounding-box {
+        position: absolute;
+        outline: 2px solid red;
+        background: rgba(97, 97, 97, 0.247);
+        color: rgb(255, 255, 255);
+        font-weight: bolder;
+        padding: 2px 5px;
+      }
+
+      /* Style the input container */
+      .input-container {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      /* Style the input box */
+      #imageUpload {
+        width: 400px;
+        height: 40px;
+        padding-top: 20px;
+        padding-left: 20px;
+        margin-right: 40px;
+        background-color: #6ff8ed;
+        color: rgb(0, 0, 0);
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+      }
+
+      /* Style the loading spinner */
+      .loading-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(0, 0, 0, 0.336);
+        border-top: 4px solid #333;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: none; /* Initially hidden */
+      }
+
+      @keyframes spin {
+        0% {
+          transform: translate(-50%, -50%) rotate(0deg);
         }
-
-        h1 {
-            
-            color:cadetblue;
-            font-size: 40px;
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg);
         }
+      }
 
-        .image-container {
-            /* text-align: center; */
-            position: relative;
-            max-width: 500px;
-        }
+      /* Style for past uploaded images and data */
+      .past-uploads {
+        margin-top: 20px; /* Add margin to separate past uploads from current image */
+        text-align: center;
+      }
 
-        .image {
-            /* position: relative; */
-            /* display: inline-block; Make the image inline-block to center it */
-            /* max-width: 100%; */
-            width: 100%;
-        }
+      .past-upload {
+        display: list-item;
+        margin: 10px;
+      }
 
-        img {
-            width: 100%;
-            display: block;
+      .past-image {
+        max-width: 100px; /* Limit image width for past uploads */
+        display: block;
+      }
 
-        }
-
-        .objects {
-            position: absolute;
-            z-index: 2;
-            top: 0;
-            left: 0;
-        }
-
-        .bounding-box {
-            position: absolute;
-            outline: 2px solid red;
-            background: rgba(97, 97, 97, 0.247);
-            color: rgb(255, 255, 255);
-            font-weight:bolder;
-            padding: 2px 5px;
-        }
-
-        /* Style the input container */
-        .input-container {
-            text-align: center;
-            margin-bottom: 20px;
-            
-        }
-
-        /* Style the input box */
-        #imageUpload {
-            width: 400px;
-            height: 40px;
-            padding-top: 20px;
-            padding-left: 20px;
-            margin-right: 40px;
-            background-color: #6ff8ed;
-            color: rgb(0, 0, 0);
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-        }
-
-        /* Style the loading spinner */
-        .loading-spinner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(0, 0, 0, 0.336);
-            border-top: 4px solid #333;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            display: none; /* Initially hidden */
-        }
-
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        /* Style for past uploaded images and data */
-        .past-uploads {
-            margin-top: 20px; /* Add margin to separate past uploads from current image */
-            text-align: center;
-        }
-
-        .past-upload {
-            display:list-item;
-            margin: 10px;
-        }
-
-        .past-image {
-            max-width: 100px; /* Limit image width for past uploads */
-            display: block;
-        }
-
-        .past-data {
-          margin-top: 5px;
-        }
-
-      
+      .past-data {
+        margin-top: 5px;
+      }
     </style>
   </head>
   <body>
     <h1>AI Object Detection</h1>
-     <!-- Add an input element for image upload -->
+    <!-- Add an input element for image upload -->
     <div class="input-container">
       <input type="file" id="imageUpload" accept="image/*" />
-  </div>
+    </div>
 
-  <div class="image-container">
+    <div class="image-container">
       <div class="image">
-          <img id="image" />
-          <div class="loading-spinner" id="loading"></div> <!-- Loading spinner -->
+        <img id="image" />
+        <div class="loading-spinner" id="loading"></div>
+        <!-- Loading spinner -->
       </div>
       <div class="objects">
-          <!-- ... (your existing code for bounding boxes) ... -->
+        <!-- ... (your existing code for bounding boxes) ... -->
       </div>
-  </div>
+    </div>
 
-  <!-- Container for past uploaded images and data -->
-  <div class="past-uploads" id="pastUploads">
+    <!-- Container for past uploaded images and data -->
+    <div class="past-uploads" id="pastUploads">
       <!-- Past uploads will be displayed here -->
-  </div>
+    </div>
 
-  <script type="module">
+    <script type="module">
       import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0";
 
       async function run() {
-          // Array to store past uploaded image data
-          const pastUploads = [];
+        // Array to store past uploaded image data
+        const pastUploads = [];
 
-          // Function to handle image upload
-          function handleImageUpload(event) {
-              const file = event.target.files[0];
-              if (file) {
-                  const src = URL.createObjectURL(file);
-                  const img = document.querySelector("#image"); // Get the image element
-                  img.setAttribute("src", src); // Set the image source
+        // Function to handle image upload
+        function handleImageUpload(event) {
+          const file = event.target.files[0];
+          if (file) {
+            const src = URL.createObjectURL(file);
+            const img = document.querySelector("#image"); // Get the image element
+            img.setAttribute("src", src); // Set the image source
 
-                  // Show the loading spinner
-                  const loading = document.querySelector("#loading");
-                  loading.style.display = "block";
+            // Show the loading spinner
+            const loading = document.querySelector("#loading");
+            loading.style.display = "block";
 
-                  // Clear existing bounding boxes
-                  const objectsContainer = document.querySelector(".objects");
-                  objectsContainer.innerHTML = "";
+            // Clear existing bounding boxes
+            const objectsContainer = document.querySelector(".objects");
+            objectsContainer.innerHTML = "";
 
-                  // Add an event listener to wait for the image to load
-        
-                  img.onload = function() {
-                    // Access the naturalWidth and naturalHeight properties of the img element
-                    const naturalWidth = img.naturalWidth;
-                    const naturalHeight = img.naturalHeight;
+            // Add an event listener to wait for the image to load
 
-                    // Now you can use naturalWidth and naturalHeight as needed
-                    console.log(`Natural Width: ${naturalWidth}`);
-                    console.log(`Natural Height: ${naturalHeight}`);
+            img.onload = function () {
+              // Access the naturalWidth and naturalHeight properties of the img element
+              const naturalWidth = img.naturalWidth;
+              const naturalHeight = img.naturalHeight;
 
-                    // Call detectObjects with src and measurements
-                    detectObjects(src, naturalWidth, naturalHeight);
+              // Now you can use naturalWidth and naturalHeight as needed
+              console.log(`Natural Width: ${naturalWidth}`);
+              console.log(`Natural Height: ${naturalHeight}`);
 
-                   };
-
-              }
+              // Call detectObjects with src and measurements
+              detectObjects(src, naturalWidth, naturalHeight);
+            };
           }
-
-          // Function to detect objects in the image
-          async function detectObjects(src, naturalWidth, naturalHeight) {
-              const img = document.querySelector("#image");
-              const loading = document.querySelector("#loading");
-
-              const detector = await pipeline(
-                  "object-detection",
-                  "Xenova/detr-resnet-50"
-              );
-              const output = await detector(src, { threshold: 0.9 });
-
-              loading.style.display = "none"; // Hide the loading spinner
-
-              if (output.length === 0) {
-                  alert("No objects found :(");
-              }
-
-              // Clear existing bounding boxes
-              const objectsContainer = document.querySelector(".objects");
-              objectsContainer.innerHTML = "";
-
-              output.forEach((obj, index) => {
-                  const boundingBox = document.createElement("div");
-                  boundingBox.innerHTML = obj.label;
-                  boundingBox.className = "bounding-box";
-                  boundingBox.style.left = obj.box.xmin + "%";
-                  boundingBox.style.top = obj.box.ymin + "%";
-                  boundingBox.style.width = obj.box.xmax - obj.box.xmin + "%";
-                  boundingBox.style.height = obj.box.ymax - obj.box.ymin + "%";
-                  objectsContainer.appendChild(boundingBox);
-              });
-
-              // Store the current upload data in pastUploads array
-              pastUploads.push({ src, labels: output.map(obj => obj.label), timestamp: new Date().toLocaleString() });
-
-              // Display past uploads
-              displayPastUploads();
-          }
-
-          // Function to display past uploads
-          function displayPastUploads() {
-            const pastUploadsContainer = document.querySelector("#pastUploads");
-                pastUploadsContainer.innerHTML = ""; // Clear previous content
-
-                pastUploads.forEach((upload) => {
-                    const pastUploadDiv = document.createElement("div");
-                    pastUploadDiv.className = "past-upload";
-
-                    // Create an image element for the past upload
-                    const pastImage = document.createElement("img");
-                    pastImage.className = "past-image";
-                    pastImage.src = upload.src;
-
-                    // Create a timestamp element for the past upload
-                    const timestamp = document.createElement("p");
-                    timestamp.textContent = `Uploaded at: ${upload.timestamp}`;
-
-                    // Create a labels element for the past upload
-                    const labels = document.createElement("p");
-                    labels.className = "past-data";
-                    labels.textContent = `Labels: ${upload.labels.join(", ")}`;
-
-                    pastUploadDiv.appendChild(pastImage);
-                    pastUploadDiv.appendChild(timestamp);
-                    pastUploadDiv.appendChild(labels);
-                    pastUploadsContainer.appendChild(pastUploadDiv);
-                });
-            }
-
-            // Add an event listener for image upload
-            const imageUpload = document.querySelector("#imageUpload");
-            imageUpload.addEventListener("change", handleImageUpload);
-
-            // Display past uploads initially
-            displayPastUploads();
         }
 
-        run();
+        // Function to detect objects in the image
+        async function detectObjects(src, naturalWidth, naturalHeight) {
+          const img = document.querySelector("#image");
+          const loading = document.querySelector("#loading");
+
+          const detector = await pipeline(
+            "object-detection",
+            "Xenova/detr-resnet-50"
+          );
+          const output = await detector(src, { threshold: 0.9 });
+
+          loading.style.display = "none"; // Hide the loading spinner
+
+          if (output.length === 0) {
+            alert("No objects found :(");
+          }
+
+          // Clear existing bounding boxes
+          const objectsContainer = document.querySelector(".objects");
+          // objectsContainer.innerHTML = "";
+
+          output.forEach((obj) => {
+            console.log(obj);
+
+            const boundingBox = document.createElement("div");
+            boundingBox.innerHTML = obj.label;
+            boundingBox.className = "bounding-box";
+
+            // Converting from px to %
+            // left / imageWidth * 100
+
+            let left = (obj.box.xmin / naturalWidth) * 100;
+            let top = (obj.box.ymin / naturalHeight) * 100;
+            let width = ((obj.box.xmax - obj.box.xmin) / naturalWidth) * 100;
+            let height = ((obj.box.ymax - obj.box.ymin) / naturalHeight) * 100;
+
+            boundingBox.style.left = left + "%";
+            boundingBox.style.top = top + "%";
+            boundingBox.style.width = width + "%";
+            boundingBox.style.height = height + "%";
+
+            objectsContainer.appendChild(boundingBox);
+          });
+
+          // Store the current upload data in pastUploads array
+          pastUploads.push({
+            src,
+            labels: output.map((obj) => obj.label),
+            timestamp: new Date().toLocaleString(),
+          });
+
+          // Display past uploads
+          displayPastUploads();
+        }
+
+        // Function to display past uploads
+        function displayPastUploads() {
+          const pastUploadsContainer = document.querySelector("#pastUploads");
+          pastUploadsContainer.innerHTML = ""; // Clear previous content
+
+          pastUploads.forEach((upload) => {
+            const pastUploadDiv = document.createElement("div");
+            pastUploadDiv.className = "past-upload";
+
+            // Create an image element for the past upload
+            const pastImage = document.createElement("img");
+            pastImage.className = "past-image";
+            pastImage.src = upload.src;
+
+            // Create a timestamp element for the past upload
+            const timestamp = document.createElement("p");
+            timestamp.textContent = `Uploaded at: ${upload.timestamp}`;
+
+            // Create a labels element for the past upload
+            const labels = document.createElement("p");
+            labels.className = "past-data";
+            labels.textContent = `Labels: ${upload.labels.join(", ")}`;
+
+            pastUploadDiv.appendChild(pastImage);
+            pastUploadDiv.appendChild(timestamp);
+            pastUploadDiv.appendChild(labels);
+            pastUploadsContainer.appendChild(pastUploadDiv);
+          });
+        }
+
+        // Add an event listener for image upload
+        const imageUpload = document.querySelector("#imageUpload");
+        imageUpload.addEventListener("change", handleImageUpload);
+
+        // Display past uploads initially
+        displayPastUploads();
+      }
+
+      run();
     </script>
-</body>
+  </body>
 </html>
