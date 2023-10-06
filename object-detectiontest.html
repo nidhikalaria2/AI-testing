@@ -7,9 +7,10 @@
     <title>AI-testing</title>
     <style>
       body {
-            display:inline-block;
-            justify-content: center;
-            align-items: center;
+            display:flex;
+            flex-direction: column;
+            justify-content: start;
+            align-items:center;
             min-height: 100vh;
             margin: 0;
             background-color: #f5f4eb;
@@ -24,12 +25,20 @@
         .image-container {
             /* text-align: center; */
             position: relative;
+            max-width: 500px;
         }
 
         .image {
             /* position: relative; */
             /* display: inline-block; Make the image inline-block to center it */
-            max-width: 100%;
+            /* max-width: 100%; */
+            width: 100%;
+        }
+
+        img {
+            width: 100%;
+            display: block;
+
         }
 
         .objects {
@@ -157,12 +166,27 @@
                   const objectsContainer = document.querySelector(".objects");
                   objectsContainer.innerHTML = "";
 
-                  detectObjects(src);
+                  // Add an event listener to wait for the image to load
+        
+                  img.onload = function() {
+                    // Access the naturalWidth and naturalHeight properties of the img element
+                    const naturalWidth = img.naturalWidth;
+                    const naturalHeight = img.naturalHeight;
+
+                    // Now you can use naturalWidth and naturalHeight as needed
+                    console.log(`Natural Width: ${naturalWidth}`);
+                    console.log(`Natural Height: ${naturalHeight}`);
+
+                    // Call detectObjects with src and measurements
+                    detectObjects(src, naturalWidth, naturalHeight);
+
+                   };
+
               }
           }
 
           // Function to detect objects in the image
-          async function detectObjects(src) {
+          async function detectObjects(src, naturalWidth, naturalHeight) {
               const img = document.querySelector("#image");
               const loading = document.querySelector("#loading");
 
@@ -186,10 +210,10 @@
                   const boundingBox = document.createElement("div");
                   boundingBox.innerHTML = obj.label;
                   boundingBox.className = "bounding-box";
-                  boundingBox.style.left = obj.box.xmin + "px";
-                  boundingBox.style.top = obj.box.ymin + "px";
-                  boundingBox.style.width = obj.box.xmax - obj.box.xmin + "px";
-                  boundingBox.style.height = obj.box.ymax - obj.box.ymin + "px";
+                  boundingBox.style.left = obj.box.xmin + "%";
+                  boundingBox.style.top = obj.box.ymin + "%";
+                  boundingBox.style.width = obj.box.xmax - obj.box.xmin + "%";
+                  boundingBox.style.height = obj.box.ymax - obj.box.ymin + "%";
                   objectsContainer.appendChild(boundingBox);
               });
 
